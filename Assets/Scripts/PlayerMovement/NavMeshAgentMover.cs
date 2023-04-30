@@ -1,59 +1,72 @@
+using RPG.Combat;
+using RPG.Core;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.InputSystem;
 
-public class NavMeshAgentMover : MonoBehaviour
+namespace RPG.PlayerMovement
 {
-    #region Variables
-
-    [SerializeField] private Animator playerAnimator;
-    private NavMeshAgent _playerAgent;
-    private static readonly int MovementSpeed = Animator.StringToHash("MoveSpeed");
-
-    #endregion
-
-    #region UnityMethods
-
-    private void Awake()
+    public class NavMeshAgentMover : MonoBehaviour, IAction
     {
-        _playerAgent = GetComponent<NavMeshAgent>();
-    }
+        #region Variables
 
+        private Animator _playerAnimator;
+        private NavMeshAgent _playerAgent;
+        private static readonly int MovementSpeed = Animator.StringToHash("MoveSpeed");
+        private ActionScheduler _actionScheduler;
 
+        #endregion
 
-    private void Update()
-    {
-        UpdateAnimator();
-    }
+        #region UnityMethods
 
-    private void UpdateAnimator()
-    {
-        // Convert from global to local because the NavMeshAgent velocity is in world space,
-        // Animator parameter needs the local velocity to blend correctly
-        var localVelocity = transform.InverseTransformDirection(_playerAgent.velocity);
-        playerAnimator.SetFloat(MovementSpeed, localVelocity.z);
-    }
-
-
-
-    #endregion
-
-    #region CustomFunctions
-    
-    public void MoveToCursor()
-    {
-        var ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-        if (Physics.Raycast(ray, out var raycastHit))
+        private void Awake()
         {
-            var point = raycastHit.point;
-            SetPlayerDestination(point);
+            _playerAgent = GetComponent<NavMeshAgent>();
+            _actionScheduler = GetComponent<ActionScheduler>();
+            _playerAnimator = GetComponent<Animator>();
         }
-    }
 
-    private void SetPlayerDestination(Vector3 point)
-    {
-        _playerAgent.SetDestination(point);
-    }
+        private void Update()
+        {
+            UpdateAnimator();
+        }
 
-    #endregion
+        private void UpdateAnimator()
+        {
+            // Convert from global to local because the NavMeshAgent velocity is in world space,
+            // Animator parameter needs the local velocity to blend correctly
+            var localVelocity = transform.InverseTransformDirection(_playerAgent.velocity);
+            _playerAnimator.SetFloat(MovementSpeed, localVelocity.z);
+        }
+
+        #endregion
+
+        #region CustomFunctions
+
+        public void StartMoveAction(Vector3 destination)
+        {
+            _actionScheduler.StartAction(this);
+            MoveTo(destination);
+        }
+        
+        public void MoveTo(Vector3 targetPosition)
+        {
+            if (_playerAgent.SetDestination(targetPosition))
+            {
+                IsStoppedFalse();
+            }
+        }
+
+        private void IsStoppedFalse()
+        {
+            _playerAgent.isStopped = false;
+        }
+
+        public void Cancel()
+        {
+            _playerAgent.isStopped = true;
+        }
+        
+        
+        #endregion
+    }
 }
