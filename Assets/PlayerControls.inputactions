@@ -2,11 +2,11 @@
     "name": "PlayerControls",
     "maps": [
         {
-            "name": "PlayerMovement",
+            "name": "PlayerPrimaryActions",
             "id": "fe06db65-5417-4548-abfe-e4714889ac2c",
             "actions": [
                 {
-                    "name": "ClickToMove",
+                    "name": "PrimaryButton",
                     "type": "Button",
                     "id": "b8d407e7-0921-4ed6-9f40-0cb66c7faac4",
                     "expectedControlType": "Button",
@@ -23,7 +23,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ClickToMove",
+                    "action": "PrimaryButton",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

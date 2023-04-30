@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
@@ -7,12 +6,8 @@ public class NavMeshAgentMover : MonoBehaviour
 {
     #region Variables
 
-    [SerializeField] private InputActionAsset playerMoveInputActionAsset;
     [SerializeField] private Animator playerAnimator;
     private NavMeshAgent _playerAgent;
-    private Ray _lastRay;
-    private InputAction _leftClickAction;
-    private InputActionMap _playerMoveActionMap;
     private static readonly int MovementSpeed = Animator.StringToHash("MoveSpeed");
 
     #endregion
@@ -21,29 +16,13 @@ public class NavMeshAgentMover : MonoBehaviour
 
     private void Awake()
     {
-        _playerMoveActionMap = playerMoveInputActionAsset.FindActionMap("PlayerMovement");
-        _leftClickAction = _playerMoveActionMap.FindAction("ClickToMove");
         _playerAgent = GetComponent<NavMeshAgent>();
     }
 
-    private void OnEnable()
-    {
-        _leftClickAction.Enable();
-    }
 
-    private void Start()
-    {
-   
-    }
 
     private void Update()
     {
-        Debug.Log(_leftClickAction.phase);
-        if (_leftClickAction.phase == InputActionPhase.Performed)
-        {
-            if (Camera.main != null) MoveToCursor();
-        }
-        
         UpdateAnimator();
     }
 
@@ -55,20 +34,25 @@ public class NavMeshAgentMover : MonoBehaviour
         playerAnimator.SetFloat(MovementSpeed, localVelocity.z);
     }
 
-    private void OnDisable()
-    {
-        _leftClickAction.Disable();
-    }
+
 
     #endregion
 
     #region CustomFunctions
     
-    private void MoveToCursor()
+    public void MoveToCursor()
     {
         var ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-        RaycastHit raycastHit;
-        if (Physics.Raycast(ray, out raycastHit)) _playerAgent.SetDestination(raycastHit.point);
+        if (Physics.Raycast(ray, out var raycastHit))
+        {
+            var point = raycastHit.point;
+            SetPlayerDestination(point);
+        }
+    }
+
+    private void SetPlayerDestination(Vector3 point)
+    {
+        _playerAgent.SetDestination(point);
     }
 
     #endregion
