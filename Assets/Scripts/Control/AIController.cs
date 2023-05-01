@@ -1,6 +1,7 @@
 ﻿using System;
 using RPG.Combat;
 using RPG.Core;
+using RPG.PlayerMovement;
 using UnityEngine;
 
 namespace RPG.Control
@@ -10,9 +11,14 @@ namespace RPG.Control
         #region Variables
 
         [SerializeField] private float chaseDistance = 5f;
+        [SerializeField] private float investigateTime = 3f;
         private Health _health;
         private GameObject _player;
         private Fighter _fighter;
+        private Vector3 _guardPosition;
+        private NavMeshAgentMover _navMeshAgentMover;
+        private float _timeSinceLastSawPlayer;
+        private ActionScheduler _actionScheduler;
 
         #endregion
 
@@ -23,6 +29,10 @@ namespace RPG.Control
             _player = GameObject.FindGameObjectWithTag("Player");
             _fighter = GetComponent<Fighter>();
             _health = GetComponent<Health>();
+            _guardPosition = transform.position;
+            _navMeshAgentMover = GetComponent<NavMeshAgentMover>();
+            _actionScheduler = GetComponent<ActionScheduler>();
+            _timeSinceLastSawPlayer = Mathf.Infinity;
         }
 
         private void Update()
@@ -30,9 +40,20 @@ namespace RPG.Control
             if (_health.HasDied) return;
 
             if (InAttackRange() && _fighter.CanAttack(_player))
-                _fighter.Attack(_player);
+            {
+                _timeSinceLastSawPlayer = 0f;
+                AttackBehaviour();
+            }
+            else if (_timeSinceLastSawPlayer < investigateTime)
+            {
+                InvestigateBehaviour();
+            }
             else
-                _fighter.Cancel();
+            {
+                ReturnToGuardBehaviour();
+            }
+
+            _timeSinceLastSawPlayer += Time.deltaTime;
         }
 
         private void OnDrawGizmosSelected()
@@ -53,6 +74,23 @@ namespace RPG.Control
         private float DistanceToPlayer()
         {
             return Vector3.Distance(transform.position, _player.transform.position);
+        }
+        
+        
+        private void ReturnToGuardBehaviour()
+        {
+            _fighter.Cancel();
+            _navMeshAgentMover.StartMoveAction(_guardPosition);
+        }
+
+        private void InvestigateBehaviour()
+        {
+            _actionScheduler.CancelCurrentAction();
+        }
+
+        private void AttackBehaviour()
+        {
+            _fighter.Attack(_player);
         }
 
         #endregion
