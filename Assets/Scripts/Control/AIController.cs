@@ -1,4 +1,5 @@
-﻿using RPG.Combat;
+﻿using System;
+using RPG.Combat;
 using RPG.Core;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ namespace RPG.Control
         private Health _health;
         private GameObject _player;
         private Fighter _fighter;
-        
+
         #endregion
 
         #region UnityFunctions
@@ -27,16 +28,22 @@ namespace RPG.Control
         private void Update()
         {
             if (_health.HasDied) return;
-            
+
             if (InAttackRange() && _fighter.CanAttack(_player))
-            {
                 _fighter.Attack(_player);
-            }
             else
-            {
                 _fighter.Cancel();
-            }
         }
+
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(transform.position, chaseDistance);
+        }
+
+        #endregion
+
+        #region CustomFunctions
 
         private bool InAttackRange()
         {
