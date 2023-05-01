@@ -55,6 +55,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 6711387071734693256, guid: 0365f87fe0d51b04abec02d3317fed26, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 7301430665809498591, guid: 0365f87fe0d51b04abec02d3317fed26, type: 3}
+      propertyPath: weaponRange
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0365f87fe0d51b04abec02d3317fed26, type: 3}
 --- !u!4 &3310292821239721602 stripped

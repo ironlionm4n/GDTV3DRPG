@@ -11,6 +11,7 @@ namespace RPG.PlayerMovement
 
         private Animator _playerAnimator;
         private NavMeshAgent _playerAgent;
+        private Health _health;
         private static readonly int MovementSpeed = Animator.StringToHash("MoveSpeed");
         private ActionScheduler _actionScheduler;
 
@@ -23,10 +24,12 @@ namespace RPG.PlayerMovement
             _playerAgent = GetComponent<NavMeshAgent>();
             _actionScheduler = GetComponent<ActionScheduler>();
             _playerAnimator = GetComponent<Animator>();
+            _health = GetComponent<Health>();
         }
 
         private void Update()
         {
+            _playerAgent.enabled = !_health.HasDied;
             UpdateAnimator();
         }
 

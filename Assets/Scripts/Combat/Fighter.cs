@@ -12,12 +12,13 @@ namespace RPG.Combat
         [SerializeField] private float weaponDamage = 5f;
         [SerializeField] private float timeBetweenAttacks = 1f;
 
-        private Transform _target;
+        private Health _target;
         private NavMeshAgentMover _navMeshMover;
         private ActionScheduler _actionScheduler;
         private Animator _playerAnimator;
-        private float _timeSinceLastAttack = 0;
+        private float _timeSinceLastAttack = Mathf.Infinity;
         private static readonly int AttackL1 = Animator.StringToHash("AttackL1");
+        private static readonly int StopAttack = Animator.StringToHash("StopAttack");
 
         #endregion
 
@@ -35,12 +36,13 @@ namespace RPG.Combat
             _timeSinceLastAttack += Time.deltaTime;
             if (_target != null)
             {
-                if (Vector3.Distance(transform.position, _target.position) > weaponRange)
-                    _navMeshMover.MoveTo(_target.position);
+                if (_target.HasDied) return;
+     
+                if (Vector3.Distance(transform.position, _target.transform.position) > weaponRange)
+                    _navMeshMover.MoveTo(_target.transform.position);
                 else
                 {
                     _navMeshMover.Cancel();
-   
                     AttackState();
                 }
             }
@@ -50,6 +52,14 @@ namespace RPG.Combat
         {
             if (!(_timeSinceLastAttack >= timeBetweenAttacks)) return;
             
+            transform.LookAt(_target.transform);
+            TriggerAttack();
+
+        }
+
+        private void TriggerAttack()
+        {
+            _playerAnimator.ResetTrigger(StopAttack);
             _playerAnimator.SetTrigger(AttackL1);
             _timeSinceLastAttack = 0f;
         }
@@ -58,22 +68,34 @@ namespace RPG.Combat
 
         #region CustomFunctions
 
-        public void Attack(CombatTarget combatTarget)
+        public bool CanAttack(GameObject combatTarget)
+        {
+            if (combatTarget == null) return false;
+            
+            var combatTargetHealth = combatTarget.GetComponent<Health>();
+            return combatTargetHealth != null && !combatTargetHealth.HasDied;
+        }
+        
+        public void Attack(GameObject combatTarget)
         {
             _actionScheduler.StartAction(this);
-            _target = combatTarget.transform;
+            _target = combatTarget.transform.GetComponent<Health>();
         }
 
         public void Cancel()
         {
+            _playerAnimator.SetTrigger(StopAttack);
+            _playerAnimator.ResetTrigger(AttackL1);
             _target = null;
         }
 
         // animation event
         private void Hit()
         {
-            print("Hit");
-            _target.GetComponent<Health>().TakeDamage(weaponDamage);
+            if (_target != null)
+            {
+                _target.TakeDamage(weaponDamage);
+            }
         }
         
         #endregion

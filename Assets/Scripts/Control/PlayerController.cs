@@ -1,5 +1,6 @@
 ﻿using System;
 using RPG.Combat;
+using RPG.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using RPG.PlayerMovement;
@@ -15,6 +16,7 @@ namespace RPG.Control
         private Ray _lastRay;
         private InputAction _leftClickAction;
         private InputActionMap _playerMoveActionMap;
+        private Health _health;
 
         private void Awake()
         {
@@ -22,6 +24,7 @@ namespace RPG.Control
             _leftClickAction = _playerMoveActionMap.FindAction("PrimaryButton");
             _navMeshAgentMover = GetComponent<NavMeshAgentMover>();
             _fighter = GetComponent<Fighter>();
+            _health = GetComponent<Health>();
         }
         
         private void OnEnable()
@@ -31,6 +34,8 @@ namespace RPG.Control
 
         private void Update()
         {
+            if (_health.HasDied) return;
+            
             if (_leftClickAction.phase == InputActionPhase.Performed)
             {
                 PerformRaycasts();
@@ -75,10 +80,15 @@ namespace RPG.Control
             foreach (var hit in raycastHits)
             {
                 var combatTarget = hit.transform.GetComponent<CombatTarget>();
+                
+                if(combatTarget == null) continue;
+                
+                if (!_fighter.CanAttack(combatTarget.gameObject))
+                {
+                    continue;
+                }
 
-                if (combatTarget == null) continue;
-
-                _fighter.Attack(combatTarget);
+                _fighter.Attack(combatTarget.gameObject);
                 return true;
             }
 
