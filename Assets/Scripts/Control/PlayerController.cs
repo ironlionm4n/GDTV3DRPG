@@ -63,7 +63,8 @@ namespace RPG.Control
         {
             if (Physics.Raycast(GetMouseRay(), out var hit))
             {
-                _navMeshAgentMover.StartMoveAction(hit.point);
+                // 1 is not a magic number, always want the player to move at max speed
+                _navMeshAgentMover.StartMoveAction(hit.point, 1f);
                 return true;
             }
             return false;

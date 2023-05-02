@@ -9,6 +9,8 @@ namespace RPG.PlayerMovement
     {
         #region Variables
 
+        [SerializeField] private float maxSpeed;
+
         private Animator _playerAnimator;
         private NavMeshAgent _playerAgent;
         private Health _health;
@@ -45,16 +47,17 @@ namespace RPG.PlayerMovement
 
         #region CustomFunctions
 
-        public void StartMoveAction(Vector3 destination)
+        public void StartMoveAction(Vector3 destination, float speedFraction)
         {
             _actionScheduler.StartAction(this);
-            MoveTo(destination);
+            MoveTo(destination, speedFraction);
         }
         
-        public void MoveTo(Vector3 targetPosition)
+        public void MoveTo(Vector3 targetPosition, float speedFraction)
         {
             if (_playerAgent.SetDestination(targetPosition))
             {
+                _playerAgent.speed = maxSpeed * Mathf.Clamp01(speedFraction);
                 IsStoppedFalse();
             }
         }

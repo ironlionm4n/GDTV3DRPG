@@ -39,7 +39,7 @@ namespace RPG.Combat
                 if (_target.HasDied) return;
      
                 if (Vector3.Distance(transform.position, _target.transform.position) > weaponRange)
-                    _navMeshMover.MoveTo(_target.transform.position);
+                    _navMeshMover.MoveTo(_target.transform.position, 1f);
                 else
                 {
                     _navMeshMover.Cancel();
