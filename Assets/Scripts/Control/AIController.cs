@@ -12,12 +12,17 @@ namespace RPG.Control
 
         [SerializeField] private float chaseDistance = 5f;
         [SerializeField] private float investigateTime = 3f;
+        [SerializeField] private PatrolPath patrolPath;
+        [SerializeField] private float waypointArrivalThreshold;
+        [SerializeField] private float waypointDwellTime;
         private Health _health;
         private GameObject _player;
         private Fighter _fighter;
         private Vector3 _guardPosition;
+        private int _targetWaypointIndex;
         private NavMeshAgentMover _navMeshAgentMover;
         private float _timeSinceLastSawPlayer;
+        private float _timeSinceArrivedAtWaypoint;
         private ActionScheduler _actionScheduler;
 
         #endregion
@@ -33,6 +38,8 @@ namespace RPG.Control
             _navMeshAgentMover = GetComponent<NavMeshAgentMover>();
             _actionScheduler = GetComponent<ActionScheduler>();
             _timeSinceLastSawPlayer = Mathf.Infinity;
+            _timeSinceArrivedAtWaypoint = Mathf.Infinity;
+            _targetWaypointIndex = 0;
         }
 
         private void Update()
@@ -53,7 +60,13 @@ namespace RPG.Control
                 ReturnToGuardBehaviour();
             }
 
+            IncrementTimers();
+        }
+
+        private void IncrementTimers()
+        {
             _timeSinceLastSawPlayer += Time.deltaTime;
+            _timeSinceArrivedAtWaypoint += Time.deltaTime;
         }
 
         private void OnDrawGizmosSelected()
@@ -75,12 +88,46 @@ namespace RPG.Control
         {
             return Vector3.Distance(transform.position, _player.transform.position);
         }
-        
-        
+
+
         private void ReturnToGuardBehaviour()
         {
             _fighter.Cancel();
-            _navMeshAgentMover.StartMoveAction(_guardPosition);
+
+            var nextPosition = _guardPosition;
+
+            if (patrolPath != null)
+            {
+                // have arrived at waypoint
+                if (AtWaypoint())
+                {
+                    _timeSinceArrivedAtWaypoint = 0;
+                    // find the next waypoint in path
+                    CycleWaypoint();
+                }
+
+                nextPosition = GetCurrentWaypoint();
+            }
+
+            if (_timeSinceArrivedAtWaypoint > waypointDwellTime)
+            {
+                _navMeshAgentMover.StartMoveAction(nextPosition);
+            }
+        }
+
+        private Vector3 GetCurrentWaypoint()
+        {
+            return patrolPath.GetWaypoint(_targetWaypointIndex);
+        }
+
+        private void CycleWaypoint()
+        {
+            _targetWaypointIndex = patrolPath.GetNextIndex(_targetWaypointIndex);
+        }
+
+        private bool AtWaypoint()
+        {
+            return Vector3.Distance(transform.position, GetCurrentWaypoint()) < waypointArrivalThreshold;
         }
 
         private void InvestigateBehaviour()
