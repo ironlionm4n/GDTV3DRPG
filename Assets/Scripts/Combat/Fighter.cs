@@ -87,6 +87,7 @@ namespace RPG.Combat
             _playerAnimator.SetTrigger(StopAttack);
             _playerAnimator.ResetTrigger(AttackL1);
             _target = null;
+            _navMeshMover.Cancel();
         }
 
         // animation event
