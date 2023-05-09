@@ -46,13 +46,11 @@ namespace RPG.Control
         {
             if (CheckForCombatTarget())
             {
-                Debug.Log("CheckForCombat True");
                 return;
             }
 
             if (CanMoveToCursor())
             {
-                print("CanMoveToCursor True");
                 return;
             }
             
