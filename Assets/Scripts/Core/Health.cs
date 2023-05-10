@@ -1,8 +1,5 @@
-﻿using System;
-using Newtonsoft.Json.Linq;
-using RPG.SaveSystem;
+﻿using Newtonsoft.Json.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace RPG.Core
 {
