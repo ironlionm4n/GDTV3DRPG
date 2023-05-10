@@ -1,11 +1,13 @@
+using Newtonsoft.Json.Linq;
 using RPG.Combat;
 using RPG.Core;
+using RPG.SaveSystem;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace RPG.PlayerMovement
 {
-    public class NavMeshAgentMover : MonoBehaviour, IAction
+    public class NavMeshAgentMover : MonoBehaviour, IAction, IJsonSavable
     {
         #region Variables
 
@@ -71,7 +73,19 @@ namespace RPG.PlayerMovement
         {
             _playerAgent.isStopped = true;
         }
-        
+
+        public JToken CaptureAsJToken()
+        {
+            return transform.position.ToToken();
+        }
+
+        public void RestoreFromJToken(JToken state)
+        {
+            _playerAgent.enabled = false;
+            transform.position = state.ToVector3();
+            _playerAgent.enabled = true;
+            _actionScheduler.CancelCurrentAction();
+        }
         
         #endregion
     }

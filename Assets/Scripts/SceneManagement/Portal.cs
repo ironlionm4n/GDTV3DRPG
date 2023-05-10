@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using RPG.SaveSystem;
 using RPG.SceneManagement;
 using UnityEngine;
 using UnityEngine.AI;
@@ -20,6 +21,7 @@ public class Portal : MonoBehaviour
     [SerializeField] private float fadeInTIme;
     [SerializeField] private float fadeOutTime;
     [SerializeField] private float fadeWaitTime;
+    [SerializeField] private SavingWrapper savingWrapper;
     
     private void OnTriggerEnter(Collider other)
     {
@@ -34,8 +36,10 @@ public class Portal : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         var fader = FindObjectOfType<Fader>();
         yield return fader.FadeIn(fadeInTIme);
+        savingWrapper.Save();
         yield return SceneManager.LoadSceneAsync(sceneIndex);
         Portal otherPortal = GetOtherPortal();
+        savingWrapper.Load();        
         UpdatePlayer(otherPortal);
         yield return new WaitForSeconds(fadeWaitTime);
         yield return fader.FadeOut(fadeOutTime);
