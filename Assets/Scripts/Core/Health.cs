@@ -1,4 +1,6 @@
 ﻿using System;
+using Newtonsoft.Json.Linq;
+using RPG.SaveSystem;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -19,6 +21,10 @@ namespace RPG.Core
             _actionScheduler = GetComponent<ActionScheduler>();
         }
 
+        public JToken CaptureAsJToken()
+        {
+            return JToken.FromObject(healthPoints);
+        }
         public void TakeDamage(float damage)
         {
             healthPoints = Mathf.Max(healthPoints - damage, 0f);
