@@ -109,7 +109,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fadeInTime: 0.2
   fadeOutTime: 0.2
-  firstLevelBuildIndex: 1
+  firstLevelBuildIndex: 0
   menuLevelBuildIndex: 0
 --- !u!4 &8672602522814104946 stripped
 Transform:

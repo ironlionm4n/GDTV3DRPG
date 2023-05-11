@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using RPG.SceneManagement;
 using UnityEngine;
@@ -13,6 +14,11 @@ namespace RPG.SaveSystem
         [SerializeField] float fadeOutTime = 0.2f;
         [SerializeField] int firstLevelBuildIndex = 1;
         [SerializeField] int menuLevelBuildIndex = 0;
+
+        private void Start()
+        {
+            StartCoroutine(LoadLastSceneImmediate());
+        }
 
         public void ContinueGame() 
         {
@@ -43,15 +49,25 @@ namespace RPG.SaveSystem
 
         private string GetCurrentSave()
         {
-            return PlayerPrefs.GetString(currentSaveKey);
+            var saveKey = PlayerPrefs.GetString(currentSaveKey);
+            Debug.Log("Save Key " + saveKey);
+            return saveKey;
         }
 
         private IEnumerator LoadLastScene()
         {
             Fader fader = FindObjectOfType<Fader>();
-            yield return fader.FadeOut(fadeOutTime);
-            yield return GetComponent<JsonSavingSystem>().LoadLastScene(GetCurrentSave());
             yield return fader.FadeIn(fadeInTime);
+            yield return GetComponent<JsonSavingSystem>().LoadLastScene(GetCurrentSave());
+            yield return fader.FadeOut(fadeOutTime);
+        }
+        
+        private IEnumerator LoadLastSceneImmediate()
+        {
+            Fader fader = FindObjectOfType<Fader>();
+            fader.FadeInImmediate();
+            yield return GetComponent<JsonSavingSystem>().LoadLastScene(GetCurrentSave());
+            yield return fader.FadeOut(fadeOutTime);
         }
 
         private IEnumerator LoadFirstScene()

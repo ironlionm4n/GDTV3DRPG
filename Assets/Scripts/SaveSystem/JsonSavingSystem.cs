@@ -21,10 +21,13 @@ namespace RPG.SaveSystem
             JObject state = LoadJsonFromFile(saveFile);
             IDictionary<string, JToken> stateDict = state; 
             int buildIndex = SceneManager.GetActiveScene().buildIndex;
-            if (stateDict.ContainsKey("lastSceneBuildIndex"))
+            var found = stateDict.ContainsKey("lastSceneBuildIndex");
+            Debug.Log("Found "+found);
+            if (found)
             {
                 buildIndex = (int)stateDict["lastSceneBuildIndex"];
             }
+            Debug.Log("Build Index "+buildIndex);
             yield return SceneManager.LoadSceneAsync(buildIndex);
             RestoreFromToken(state);
         }
