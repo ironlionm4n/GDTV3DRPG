@@ -15,7 +15,7 @@ namespace RPG.SaveSystem
         [SerializeField] int firstLevelBuildIndex = 1;
         [SerializeField] int menuLevelBuildIndex = 0;
 
-        private void Start()
+        private void OnEnable()
         {
             StartCoroutine(LoadLastSceneImmediate());
         }
@@ -66,7 +66,9 @@ namespace RPG.SaveSystem
         {
             Fader fader = FindObjectOfType<Fader>();
             fader.FadeInImmediate();
-            yield return GetComponent<JsonSavingSystem>().LoadLastScene(GetCurrentSave());
+            var saveSystem = GetComponent<JsonSavingSystem>();
+            Debug.Log(saveSystem);
+            yield return saveSystem.LoadLastScene(GetCurrentSave());
             yield return fader.FadeOut(fadeOutTime);
         }
 
