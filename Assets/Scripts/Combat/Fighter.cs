@@ -1,6 +1,8 @@
-﻿using RPG.Core;
+﻿using System;
+using RPG.Core;
 using UnityEngine;
 using RPG.PlayerMovement;
+using UnityEngine.Serialization;
 
 namespace RPG.Combat
 {
@@ -8,17 +10,16 @@ namespace RPG.Combat
     {
         #region Variables
 
-        [SerializeField] private float weaponRange = 2f;
-        [SerializeField] private float weaponDamage = 5f;
         [SerializeField] private float timeBetweenAttacks = 1f;
-        [SerializeField] private GameObject weaponPrefab;
         [SerializeField] private Transform handTransform;
+        [SerializeField] private Weapon defaultWeapon;
 
         private Health _target;
         private NavMeshAgentMover _navMeshMover;
         private ActionScheduler _actionScheduler;
         private Animator _playerAnimator;
         private float _timeSinceLastAttack = Mathf.Infinity;
+        private Weapon _currentEquippedWeapon;
         private static readonly int AttackL1 = Animator.StringToHash("AttackL1");
         private static readonly int StopAttack = Animator.StringToHash("StopAttack");
 
@@ -33,6 +34,11 @@ namespace RPG.Combat
             _playerAnimator = GetComponent<Animator>();
         }
 
+        private void OnEnable()
+        {
+            EquipWeapon(defaultWeapon);
+        }
+
         private void Update()
         {
             _timeSinceLastAttack += Time.deltaTime;
@@ -40,7 +46,7 @@ namespace RPG.Combat
             {
                 if (_target.HasDied) return;
      
-                if (Vector3.Distance(transform.position, _target.transform.position) > weaponRange)
+                if (Vector3.Distance(transform.position, _target.transform.position) > _currentEquippedWeapon.GetWeaponRange)
                     _navMeshMover.MoveTo(_target.transform.position, 1f);
                 else
                 {
@@ -97,10 +103,16 @@ namespace RPG.Combat
         {
             if (_target != null)
             {
-                _target.TakeDamage(weaponDamage);
+                _target.TakeDamage(_currentEquippedWeapon.GetWeaponDamage);
             }
         }
-        
+
+        public void EquipWeapon(Weapon weapon)
+        {
+            _currentEquippedWeapon = weapon;
+            _currentEquippedWeapon.Spawn(handTransform, _playerAnimator);
+        }
+
         #endregion
     }
 }
