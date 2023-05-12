@@ -11,6 +11,8 @@ namespace RPG.Combat
         [SerializeField] private float weaponRange = 2f;
         [SerializeField] private float weaponDamage = 5f;
         [SerializeField] private float timeBetweenAttacks = 1f;
+        [SerializeField] private GameObject weaponPrefab;
+        [SerializeField] private Transform handTransform;
 
         private Health _target;
         private NavMeshAgentMover _navMeshMover;
