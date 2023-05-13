@@ -55,6 +55,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5042631426567811616, guid: 172455137a497024c886bdfe1d2c6f6f, type: 3}
+      propertyPath: isHoming
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5042631426567811616, guid: 172455137a497024c886bdfe1d2c6f6f, type: 3}
+      propertyPath: projectileSpeed
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 8188748194327239576, guid: 172455137a497024c886bdfe1d2c6f6f, type: 3}
       propertyPath: m_Parameters.colorGradient.ctime0
       value: 24792
