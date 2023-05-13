@@ -1,7 +1,7 @@
-﻿using System;
-using RPG.Core;
+﻿using RPG.Core;
 using UnityEngine;
 using RPG.PlayerMovement;
+using RPGCharacterAnims.Lookups;
 using UnityEngine.Serialization;
 
 namespace RPG.Combat
@@ -11,7 +11,8 @@ namespace RPG.Combat
         #region Variables
 
         [SerializeField] private float timeBetweenAttacks = 1f;
-        [SerializeField] private Transform handTransform;
+        [SerializeField] private Transform rightHandTransform;
+        [SerializeField] private Transform lefttHandTransform;
         [SerializeField] private Weapon defaultWeapon;
 
         private Health _target;
@@ -45,9 +46,12 @@ namespace RPG.Combat
             if (_target != null)
             {
                 if (_target.HasDied) return;
-     
-                if (Vector3.Distance(transform.position, _target.transform.position) > _currentEquippedWeapon.GetWeaponRange)
+
+                if (Vector3.Distance(transform.position, _target.transform.position) >
+                    _currentEquippedWeapon.GetWeaponRange)
+                {
                     _navMeshMover.MoveTo(_target.transform.position, 1f);
+                }
                 else
                 {
                     _navMeshMover.Cancel();
@@ -59,10 +63,9 @@ namespace RPG.Combat
         private void AttackState()
         {
             if (!(_timeSinceLastAttack >= timeBetweenAttacks)) return;
-            
+
             transform.LookAt(_target.transform);
             TriggerAttack();
-
         }
 
         private void TriggerAttack()
@@ -79,11 +82,11 @@ namespace RPG.Combat
         public bool CanAttack(GameObject combatTarget)
         {
             if (combatTarget == null) return false;
-            
+
             var combatTargetHealth = combatTarget.GetComponent<Health>();
             return combatTargetHealth != null && !combatTargetHealth.HasDied;
         }
-        
+
         public void Attack(GameObject combatTarget)
         {
             _actionScheduler.StartAction(this);
@@ -101,16 +104,26 @@ namespace RPG.Combat
         // animation event
         private void Hit()
         {
-            if (_target != null)
+            if (_currentEquippedWeapon.HasProjectile())
             {
-                _target.TakeDamage(_currentEquippedWeapon.GetWeaponDamage);
+                _currentEquippedWeapon.LaunchProjectile(rightHandTransform, lefttHandTransform,
+                    _target);
             }
+            else
+            {
+                if (_target != null) _target.TakeDamage(_currentEquippedWeapon.GetWeaponDamage);
+            }
+        }
+
+        private void Shoot()
+        {
+            Hit();
         }
 
         public void EquipWeapon(Weapon weapon)
         {
             _currentEquippedWeapon = weapon;
-            _currentEquippedWeapon.Spawn(handTransform, _playerAnimator);
+            _currentEquippedWeapon.Spawn(rightHandTransform, lefttHandTransform, _playerAnimator);
         }
 
         #endregion
