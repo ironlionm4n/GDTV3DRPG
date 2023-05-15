@@ -104,7 +104,7 @@ namespace RPG.Combat
         // animation event
         private void Hit()
         {
-            if (_currentEquippedWeapon.HasProjectile())
+            if (_currentEquippedWeapon.HasProjectile() && _target != null)
             {
                 _currentEquippedWeapon.LaunchProjectile(rightHandTransform, lefttHandTransform,
                     _target);
