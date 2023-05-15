@@ -331,6 +331,10 @@ PrefabInstance:
       propertyPath: defaultWeapon
       value: 
       objectReference: {fileID: 11400000, guid: 2ca4a8bfb01834b4397def4c76ad31eb, type: 2}
+    - target: {fileID: 1470135893815552511, guid: 77dd6e17217fd7345b10bfcc1ad4a298, type: 3}
+      propertyPath: defaultWeaponName
+      value: Fireball
+      objectReference: {fileID: 0}
     - target: {fileID: 5051424195238345903, guid: 77dd6e17217fd7345b10bfcc1ad4a298, type: 3}
       propertyPath: m_LocalPosition.x
       value: -29.89
