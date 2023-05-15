@@ -1,12 +1,16 @@
 using System;
 using RPG.Core;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Projectile : MonoBehaviour
 {
     [SerializeField] private float projectileSpeed;
     [SerializeField] private bool isHoming;
     [SerializeField] private GameObject hitEffect;
+    [SerializeField] private float maxLifeTime = 10f;
+    [SerializeField] private GameObject[] destroyOnHit;
+    [SerializeField] private float lifeAfterImpact = 2f;
     private Health _target;
     private CapsuleCollider _targetCapsuleCollider;
     private float _damage;
@@ -30,13 +34,18 @@ public class Projectile : MonoBehaviour
         if (other.GetComponent<Health>() != _target) return;
         if (_target.HasDied) return;
         _target.TakeDamage(_damage);
-    
+        projectileSpeed = 0;
         if (hitEffect != null)
         {
             Instantiate(hitEffect, GetAimLocation(), transform.rotation);
         }
+
+        foreach (var toDestroy in destroyOnHit)
+        {
+            Destroy(toDestroy);
+        }
         
-        Destroy(gameObject);
+        Destroy(gameObject, lifeAfterImpact);
     }
 
     public void SetTarget(Health target, float damage)
@@ -45,6 +54,8 @@ public class Projectile : MonoBehaviour
         _targetCapsuleCollider = target.GetComponent<CapsuleCollider>();
         _damage = damage;
         LookAtTargetAimLocation();
+        
+        Destroy(gameObject, maxLifeTime);
     }
 
     private Vector3 GetAimLocation()

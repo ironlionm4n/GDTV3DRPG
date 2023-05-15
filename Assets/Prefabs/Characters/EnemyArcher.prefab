@@ -103,6 +103,7 @@ MonoBehaviour:
   rightHandTransform: {fileID: 8756065300246350619}
   lefttHandTransform: {fileID: 8756065300246341467}
   defaultWeapon: {fileID: 11400000, guid: 9cfa7a4ba51ddf14dacb3e2dbbf0c98e, type: 2}
+  defaultWeaponName: BowRedProjectile
 --- !u!114 &5213817585293837805
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,12 +1,14 @@
-﻿using RPG.Core;
+﻿using Newtonsoft.Json.Linq;
+using RPG.Core;
 using UnityEngine;
 using RPG.PlayerMovement;
+using RPG.SaveSystem;
 using RPGCharacterAnims.Lookups;
 using UnityEngine.Serialization;
 
 namespace RPG.Combat
 {
-    public class Fighter : MonoBehaviour, IAction
+    public class Fighter : MonoBehaviour, IAction, IJsonSavable
     {
         #region Variables
 
@@ -14,6 +16,7 @@ namespace RPG.Combat
         [SerializeField] private Transform rightHandTransform;
         [SerializeField] private Transform lefttHandTransform;
         [SerializeField] private Weapon defaultWeapon;
+        [SerializeField] private string defaultWeaponName = "Unarmed";
 
         private Health _target;
         private NavMeshAgentMover _navMeshMover;
@@ -37,7 +40,8 @@ namespace RPG.Combat
 
         private void OnEnable()
         {
-            EquipWeapon(defaultWeapon);
+            var weapon = Resources.Load<Weapon>(defaultWeaponName);
+            EquipWeapon(weapon);
         }
 
         private void Update()
@@ -127,5 +131,17 @@ namespace RPG.Combat
         }
 
         #endregion
+
+        public JToken CaptureAsJToken()
+        {
+            return JToken.FromObject(_currentEquippedWeapon.name);
+        }
+
+        public void RestoreFromJToken(JToken state)
+        {
+            var weaponName = state.ToObject<string>();
+            var weapon = Resources.Load<Weapon>(weaponName);
+            EquipWeapon(weapon);
+        }
     }
 }

@@ -30,7 +30,16 @@ namespace RPG.Combat
                 weapon.name = _weaponName;
             }
 
-            if (weaponAnimatorOverride != null) animator.runtimeAnimatorController = weaponAnimatorOverride;
+            if (weaponAnimatorOverride != null)
+            {
+                animator.runtimeAnimatorController = weaponAnimatorOverride;
+            }
+            else
+            {
+                var overrideController = animator.runtimeAnimatorController as AnimatorOverrideController;
+                if (overrideController != null)
+                    animator.runtimeAnimatorController = overrideController.runtimeAnimatorController;
+            }
         }
 
         private Transform CheckRightHanded(Transform rightHandTransform, Transform leftHandTransform)
@@ -54,10 +63,7 @@ namespace RPG.Combat
         private void DestroyOldWeapon(Transform rightHandTransform, Transform leftHandTransform)
         {
             var oldWeapon = rightHandTransform.Find(_weaponName);
-            if (oldWeapon == null)
-            {
-                oldWeapon = leftHandTransform.Find(_weaponName);
-            }
+            if (oldWeapon == null) oldWeapon = leftHandTransform.Find(_weaponName);
 
             if (oldWeapon == null) return;
 
