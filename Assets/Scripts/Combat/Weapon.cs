@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using RPG.Attributes;
 using RPG.Core;
 using UnityEngine;
 using UnityEngine.Serialization;

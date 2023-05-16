@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json.Linq;
+using RPG.Core;
 using RPG.SaveSystem;
+using RPG.Stats;
 using UnityEngine;
 
-namespace RPG.Core
+namespace RPG.Attributes
 {
     public class Health : MonoBehaviour, IJsonSavable
     {
@@ -17,6 +19,11 @@ namespace RPG.Core
         {
             _animator = GetComponent<Animator>();
             _actionScheduler = GetComponent<ActionScheduler>();
+        }
+
+        private void Start()
+        {
+            healthPoints = GetComponent<BaseStats>().GetHealth();
         }
 
         public void TakeDamage(float damage)

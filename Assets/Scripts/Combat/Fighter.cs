@@ -3,6 +3,7 @@ using RPG.Core;
 using UnityEngine;
 using RPG.PlayerMovement;
 using RPG.SaveSystem;
+using RPG.Attributes;
 using RPGCharacterAnims.Lookups;
 using UnityEngine.Serialization;
 
