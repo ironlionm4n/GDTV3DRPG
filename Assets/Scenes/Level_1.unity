@@ -1075,6 +1075,14 @@ PrefabInstance:
       propertyPath: patrolPath
       value: 
       objectReference: {fileID: 1919047922287891520}
+    - target: {fileID: 3432907933056507795, guid: 70dbd3be3c2de944b8736111326f1968, type: 3}
+      propertyPath: chaseDistance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5477433501831374529, guid: 70dbd3be3c2de944b8736111326f1968, type: 3}
+      propertyPath: healthPoints
+      value: 400
+      objectReference: {fileID: 0}
     - target: {fileID: 8082682609781631365, guid: 70dbd3be3c2de944b8736111326f1968, type: 3}
       propertyPath: m_Name
       value: EnemyArcher
