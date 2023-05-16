@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 8485447968981852658}
   - component: {fileID: 3432907933056507795}
   - component: {fileID: 1654849875}
+  - component: {fileID: 3958239987252700945}
   m_Layer: 0
   m_Name: EnemyArcher
   m_TagString: Untagged
@@ -222,6 +223,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uniqueIdentifier: cdbcaaed-66aa-4047-b1d9-2c22f91b3645
+--- !u!114 &3958239987252700945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8082682609781631365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b875ed1de31f8ce4ca84dbf5f72a7f2f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startingLevel: 1
+  characterClass: 3
+  progressionData: {fileID: 11400000, guid: 5b82484e03140df4a876aeea8bbdf673, type: 2}
 --- !u!1 &8756065300245905647
 GameObject:
   m_ObjectHideFlags: 0

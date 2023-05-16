@@ -1,5 +1,5 @@
 using Newtonsoft.Json.Linq;
-using RPG.Combat;
+using RPG.Attributes;
 using RPG.Core;
 using RPG.SaveSystem;
 using UnityEngine;

@@ -4885,6 +4885,10 @@ PrefabInstance:
       propertyPath: rightHandTransform
       value: 
       objectReference: {fileID: 7852934954340001989}
+    - target: {fileID: 7375484006445393126, guid: 0365f87fe0d51b04abec02d3317fed26, type: 3}
+      propertyPath: progressionData
+      value: 
+      objectReference: {fileID: 11400000, guid: 5b82484e03140df4a876aeea8bbdf673, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0365f87fe0d51b04abec02d3317fed26, type: 3}
 --- !u!4 &3310292821239721602 stripped

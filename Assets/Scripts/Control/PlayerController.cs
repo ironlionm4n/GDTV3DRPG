@@ -1,6 +1,6 @@
 ﻿using System;
+using RPG.Attributes;
 using RPG.Combat;
-using RPG.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using RPG.PlayerMovement;

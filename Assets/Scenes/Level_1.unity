@@ -325,7 +325,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1170385090204207852, guid: 77dd6e17217fd7345b10bfcc1ad4a298, type: 3}
       propertyPath: healthPoints
-      value: 1000
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 1470135893815552511, guid: 77dd6e17217fd7345b10bfcc1ad4a298, type: 3}
       propertyPath: defaultWeapon
