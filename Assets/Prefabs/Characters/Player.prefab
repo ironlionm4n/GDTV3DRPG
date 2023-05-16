@@ -4941,3 +4941,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerMoveInputActionAsset: {fileID: -944628639613478452, guid: 02756539969600849ac3c0f0c318586e, type: 3}
+--- !u!114 &5024568346040014101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5187153871722125189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1542df014bc4c6a9c7a609d461b134e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  experiencePoints: 0

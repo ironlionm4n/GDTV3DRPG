@@ -112,11 +112,11 @@ namespace RPG.Combat
             if (_currentEquippedWeapon.HasProjectile() && _target != null)
             {
                 _currentEquippedWeapon.LaunchProjectile(rightHandTransform, lefttHandTransform,
-                    _target);
+                    _target, gameObject);
             }
             else
             {
-                if (_target != null) _target.TakeDamage(_currentEquippedWeapon.GetWeaponDamage);
+                if (_target != null) _target.TakeDamage(gameObject, _currentEquippedWeapon.GetWeaponDamage);
             }
         }
 
@@ -131,6 +131,11 @@ namespace RPG.Combat
             _currentEquippedWeapon.Spawn(rightHandTransform, lefttHandTransform, _playerAnimator);
         }
 
+        public Health GetTarget()
+        {
+            return _target;
+        }
+        
         #endregion
 
         public JToken CaptureAsJToken()

@@ -19,7 +19,7 @@ namespace RPG.PlayerMovement
         private static readonly int MovementSpeed = Animator.StringToHash("MoveSpeed");
         private ActionScheduler _actionScheduler;
 
-        #endregion
+        #endregion 
 
         #region UnityMethods
 

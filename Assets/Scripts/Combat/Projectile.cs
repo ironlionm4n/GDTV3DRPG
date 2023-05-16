@@ -13,6 +13,7 @@ public class Projectile : MonoBehaviour
     [SerializeField] private GameObject[] destroyOnHit;
     [SerializeField] private float lifeAfterImpact = 2f;
     private Health _target;
+    private GameObject _instigator;
     private CapsuleCollider _targetCapsuleCollider;
     private float _damage;
 
@@ -34,7 +35,7 @@ public class Projectile : MonoBehaviour
     {
         if (other.GetComponent<Health>() != _target) return;
         if (_target.HasDied) return;
-        _target.TakeDamage(_damage);
+        _target.TakeDamage(_instigator, _damage);
         projectileSpeed = 0;
         if (hitEffect != null)
         {
@@ -49,11 +50,12 @@ public class Projectile : MonoBehaviour
         Destroy(gameObject, lifeAfterImpact);
     }
 
-    public void SetTarget(Health target, float damage)
+    public void SetTarget(Health target, GameObject instigator, float damage)
     {
         _target = target;
         _targetCapsuleCollider = target.GetComponent<CapsuleCollider>();
         _damage = damage;
+        _instigator = instigator;
         LookAtTargetAimLocation();
         
         Destroy(gameObject, maxLifeTime);

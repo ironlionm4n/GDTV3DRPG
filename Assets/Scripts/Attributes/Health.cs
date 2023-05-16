@@ -26,15 +26,28 @@ namespace RPG.Attributes
             healthPoints = GetComponent<BaseStats>().GetHealth();
         }
 
-        public void TakeDamage(float damage)
+        public void TakeDamage(GameObject instigator, float damage)
         {
             healthPoints = Mathf.Max(healthPoints - damage, 0f);
             if (healthPoints != 0) return;
             if (_hasDied) return;
             
             Died();
+            AwardExperience(instigator);
         }
 
+        public float GetHealthPercentage()
+        {
+            return (healthPoints / GetComponent<BaseStats>().GetHealth()) * 100f;
+        }
+
+        private void AwardExperience(GameObject instigator)
+        {
+            var exp = instigator.GetComponent<Experience>();
+            if (exp == null) return;
+            
+            exp.GainExperience(GetComponent<BaseStats>().GetExperienceReward());
+        }
         private void Died()
         {
             _hasDied = true;
