@@ -23,7 +23,7 @@ namespace RPG.Attributes
 
         private void Start()
         {
-            healthPoints = GetComponent<BaseStats>().GetHealth();
+            healthPoints = GetComponent<BaseStats>().GetStat(Stats.Stats.Health);
         }
 
         public void TakeDamage(GameObject instigator, float damage)
@@ -38,7 +38,7 @@ namespace RPG.Attributes
 
         public float GetHealthPercentage()
         {
-            return (healthPoints / GetComponent<BaseStats>().GetHealth()) * 100f;
+            return (healthPoints / GetComponent<BaseStats>().GetStat(Stats.Stats.Health)) * 100f;
         }
 
         private void AwardExperience(GameObject instigator)
@@ -46,7 +46,7 @@ namespace RPG.Attributes
             var exp = instigator.GetComponent<Experience>();
             if (exp == null) return;
             
-            exp.GainExperience(GetComponent<BaseStats>().GetExperienceReward());
+            exp.GainExperience(GetComponent<BaseStats>().GetStat(Stats.Stats.Experience));
         }
         private void Died()
         {
