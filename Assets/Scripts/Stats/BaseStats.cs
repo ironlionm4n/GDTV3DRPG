@@ -19,7 +19,7 @@ namespace RPG.Stats
                 Debug.Log(GetLevel().ToString());
         }
 
-        public int GetLevel()
+        private int GetLevel()
         {
             var experience = GetComponent<Experience>();
 
