@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace RPG.Stats
@@ -7,18 +8,38 @@ namespace RPG.Stats
     {
         [SerializeField] private ProgressionCharacterClass[] progressionCharacterClass;
 
-        public float GetHealth(CharacterClass characterClass, int level)
+        Dictionary<CharacterClass, Dictionary<Stats, float[]>> _lookupTable;
+
+ 
+        public float GetStat(Stats stat, CharacterClass characterClass, int level)
         {
-            var returnedHealth = 0f;
-            foreach (var @class in progressionCharacterClass)
+            BuildLookUpTable();
+
+            var statLevels = _lookupTable[characterClass][stat];
+            if (statLevels.Length < level)
             {
-                if (@class.CharacterClass == characterClass)
-                {
-                    returnedHealth = @class.HealthPointsAtLevelX(level - 1);
-                }
+                return 0;
             }
 
-            return returnedHealth;
+            return statLevels[level - 1];
+        }
+        
+        private void BuildLookUpTable()
+        {
+            if (_lookupTable != null) return;
+
+            _lookupTable = new();
+            foreach (var characterClass in progressionCharacterClass)
+            {
+                var statLookupTable = new Dictionary<Stats, float[]>();
+
+                foreach (var progressionStat in characterClass.GetStats)
+                {
+                    statLookupTable[progressionStat.GetProgressionStat] = progressionStat.GetProgressionLevels;
+                }
+                
+                _lookupTable[characterClass.CharacterClass] = statLookupTable;
+            }
         }
 
         [System.Serializable]
@@ -27,12 +48,17 @@ namespace RPG.Stats
             [SerializeField] private CharacterClass characterClass;
             public CharacterClass CharacterClass => characterClass;
 
-            [SerializeField] private float[] healthPoints;
+            [SerializeField] private ProgressionStat[] stats;
+            public ProgressionStat[] GetStats => stats;
+        }
 
-            public float HealthPointsAtLevelX(int x)
-            {
-                return healthPoints[x];
-            }
+        [System.Serializable]
+        class ProgressionStat
+        {
+            [SerializeField] private Stats stat;
+            public Stats GetProgressionStat => stat;
+            [SerializeField] float[] levels;
+            public float[] GetProgressionLevels => levels;
         }
     }
 }
