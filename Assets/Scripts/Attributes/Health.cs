@@ -8,7 +8,7 @@ namespace RPG.Attributes
 {
     public class Health : MonoBehaviour, IJsonSavable
     {
-        [SerializeField] private float healthPoints = 100f;
+        private float _healthPoints = -1f;
         private Animator _animator;
         private bool _hasDied;
         public bool HasDied => _hasDied;
@@ -23,13 +23,16 @@ namespace RPG.Attributes
 
         private void Start()
         {
-            healthPoints = GetComponent<BaseStats>().GetStat(Stats.Stats.Health);
+            if (_healthPoints < 0)
+            {
+                _healthPoints = GetComponent<BaseStats>().GetStat(Stats.Stats.Health);
+            }
         }
 
         public void TakeDamage(GameObject instigator, float damage)
         {
-            healthPoints = Mathf.Max(healthPoints - damage, 0f);
-            if (healthPoints != 0) return;
+            _healthPoints = Mathf.Max(_healthPoints - damage, 0f);
+            if (_healthPoints != 0) return;
             if (_hasDied) return;
             
             Died();
@@ -38,7 +41,7 @@ namespace RPG.Attributes
 
         public float GetHealthPercentage()
         {
-            return (healthPoints / GetComponent<BaseStats>().GetStat(Stats.Stats.Health)) * 100f;
+            return (_healthPoints / GetComponent<BaseStats>().GetStat(Stats.Stats.Health)) * 100f;
         }
 
         private void AwardExperience(GameObject instigator)
@@ -57,18 +60,18 @@ namespace RPG.Attributes
         
         public JToken CaptureAsJToken()
         {
-            return JToken.FromObject(healthPoints);
+            return JToken.FromObject(_healthPoints);
         }
 
         public void RestoreFromJToken(JToken state)
         {
-            healthPoints = state.ToObject<float>();
+            _healthPoints = state.ToObject<float>();
             UpdateState();
         }
 
         private void UpdateState()
         {
-            if (healthPoints <= 0)
+            if (_healthPoints <= 0)
             {
                 Died();
             }
